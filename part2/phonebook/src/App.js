@@ -1,21 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import personService from './services/person';
+import Notification from './components/Notification';
+import Error from './components/Error';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchList, setSearchList] = useState(persons);
+  const [message, setMessage] = useState(null);
+  const [error, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(data => {
+        setPersons(data);
+        setSearchList(data)
+      })
+  }, []);
 
   const handleName = event => {
-    console.log('handlename', event.target.value)
     setNewName(event.target.value);
   }
 
@@ -25,34 +33,85 @@ const App = () => {
   }
 
   const handleSearch = event => {
-    console.log('evetn', event.target.value);
     const filterList = persons.filter(person => person.name.toLowerCase().includes(event.target.value));
-    console.log('Filter', filterList);
     setSearchList(filterList);
   }
   const handleSubmit = event => {
-    console.log('handlusbmi', newName, newPhone)
-    event.preventDefault();
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-    } else {
 
-      setPersons([
-        ...persons,
-        { name: newName, number: newPhone }
-      ]);
-      setSearchList([
-        ...searchList,
-        { name: newName, number: newPhone }
-      ]);
+    event.preventDefault();
+    const phObj = {
+      name: newName,
+      number: newPhone
+    }
+
+    if (persons.find(person => person.name === newName)) {
+      const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)
+      if (confirm) {
+        const existingPerson = persons.filter(person => person.name === newName);
+        personService
+          .updatePhone(existingPerson[0].id, phObj)
+          .then(data => {
+            setPersons(persons.map(person => person.id !== existingPerson[0].id ? person : data))
+            setSearchList(searchList.map(person => person.id !== existingPerson[0].id ? person : data))
+
+            setMessage(`Added ${data.name}`);
+            setTimeout(
+              () => {
+                setMessage(null)
+              }, 5000
+            )
+          })
+      }
+    } else {
+      personService
+        .createPhone(phObj)
+        .then(data => {
+          setPersons([
+            ...persons,
+            data
+          ]);
+          setSearchList([
+            ...searchList,
+            data
+          ]);
+          setMessage(`Added ${data.name}`);
+          setTimeout(
+            () => {
+              setMessage(null)
+            }, 5000
+          )
+        })
     }
     setNewName('');
     setNewPhone('');
   }
 
+  const handleDelete = (person) => {
+    const deletePhone = window.confirm(`Delete ${person.name}?`)
+    if (deletePhone) {
+      personService
+        .deletePhone(person.id)
+        .then(data => {
+          const list = persons.filter(data => data.id !== person.id);
+          setPersons(list);
+          setSearchList(list);
+        })
+        .catch(error => {
+          setErrorMsg(`Infomartion of ${person.name} is already remove from the server`)
+          setTimeout(() => {
+            setErrorMsg(null)
+          }, 5000)
+        })
+
+    }
+
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      {message && <Notification message={message} />}
+      {error && <Error error={error} />}
       <Filter handleSearch={handleSearch} />
       <h2>add a new</h2>
       <PersonForm
@@ -63,7 +122,7 @@ const App = () => {
         newPhone={newPhone}
       />
       <h2>Numbers</h2>
-      <Persons searchList={searchList} />
+      <Persons searchList={searchList} handleDelete={handleDelete} />
     </div>
   )
 }
