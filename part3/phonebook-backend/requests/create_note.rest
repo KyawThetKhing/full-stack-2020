@@ -1,7 +1,7 @@
-POST https://phonebook-backend-ktk.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "KKK",
-    "number": "22-234234-33"
+    "name": "DB",
+    "number": "22-234323-33"
 }

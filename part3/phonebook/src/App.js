@@ -48,6 +48,7 @@ const App = () => {
       const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)
       if (confirm) {
         const existingPerson = persons.filter(person => person.name === newName);
+        console.log('Exit', existingPerson)
         personService
           .updatePhone(existingPerson[0].id, phObj)
           .then(data => {

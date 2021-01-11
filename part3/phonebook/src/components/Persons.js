@@ -6,7 +6,7 @@ const Persons = ({ searchList, handleDelete }) => {
             {searchList.map(person => {
                 return (
                     <div key={person.name}>
-                        <p >{person.name} {person.number}</p>
+                        <p >{person.name} {person.phoneNo}</p>
                         <button onClick={() => handleDelete(person)}>delete</button>
                     </div>
                 )
