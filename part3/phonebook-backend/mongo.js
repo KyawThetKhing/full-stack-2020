@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
     console.log('Please provide the password as an argument:node mongo.js <password>')
-    process.exit();
+    process.exit()
 
 }
-const password = process.argv[2];
+const password = process.argv[2]
 
 const url = `mongodb+srv://fullstack:${password}@cluster0.riyhh.mongodb.net/phone-book-app?retryWrites=true&w=majority`
 
@@ -18,7 +18,7 @@ const peopleSchema = new mongoose.Schema({
     important: Boolean
 })
 
-const People = mongoose.model('People', peopleSchema);
+const People = mongoose.model('People', peopleSchema)
 
 if (process.argv.length === 5) {
     const poeple = new People({
@@ -29,8 +29,8 @@ if (process.argv.length === 5) {
     })
 
     poeple.save().then(result => {
-        console.log('result', result);
-        mongoose.connection.close();
+        console.log('result', result)
+        mongoose.connection.close()
     })
 }
 
@@ -40,6 +40,6 @@ if (process.argv.length === 3) {
             console.log(person)
         })
 
-        mongoose.connection.close();
+        mongoose.connection.close()
     })
 }

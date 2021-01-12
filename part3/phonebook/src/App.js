@@ -62,6 +62,10 @@ const App = () => {
               }, 5000
             )
           })
+          .catch(error => {
+            console.log('Error', error.response.data)
+            setErrorMsg(error.response.data.error)
+          })
       }
     } else {
       personService
@@ -82,6 +86,12 @@ const App = () => {
             }, 5000
           )
         })
+        .catch(
+          error => {
+            console.log('error', error.response.data)
+            setErrorMsg(error.response.data.error)
+          }
+        )
     }
     setNewName('');
     setNewPhone('');
