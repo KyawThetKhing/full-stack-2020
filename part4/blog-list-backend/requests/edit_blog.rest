@@ -1,8 +1,8 @@
-POST http://localhost:3001/api/blogs
+PUT  http://localhost:3001/api/blogs/6007e46aa8a05f573c982f0a
 Content-Type: application/json
 
 {
-    "title": "Frontend Libraires & EX",
+    "title": "Frontend Libraires",
     "author": "Quincy",
     "url": "https://freecodecamp.com/en/part3",
     "likes": 700
