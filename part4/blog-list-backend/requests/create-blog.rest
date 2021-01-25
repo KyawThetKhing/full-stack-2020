@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer deyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikt5YXcgVGhldCBLaGFpbmciLCJpZCI6IjYwMGU2N2ZlN2VlNzZlYzI5ODU4ODZhMCIsImlhdCI6MTYxMTU2MTM2OH0.FXeRt05_cB5BhyLkZdrY4XBjAF08XBR8mQ0SPrWQLpw
 
 {
-    "title": "Frontend Libraires & EX",
+    "title": "Backend Libraires & EX2",
     "author": "Quincy",
     "url": "https://freecodecamp.com/en/part3",
-    "likes": 700
+    "likes": 900
 }
